@@ -1,40 +1,30 @@
-Below are the steps to get your plugin running. You can also find instructions at:
+# FigmaBoundsHeader
 
-  https://www.figma.com/plugin-docs/plugin-quickstart/
+A plugin for [Figma](https://www.figma.com/).
 
-This plugin template uses Typescript and NPM, two standard tools in creating JavaScript applications.
+Scans the dimensions of each selected node and writes all the x/y/width/height info in a big `C` friendly `.h` file
 
-First, download Node.js which comes with NPM. This will allow you to install TypeScript and other
-libraries. You can find the download link here:
+If you use [juce](https://github.com/juce-framework/JUCE) you may be interested the original [repo](https://github.com/Tremus/CSS2JUCE)
 
-  https://nodejs.org/en/download/
+Example:
 
-Next, install TypeScript using the command:
+```C
+#pragma once
+extern const float fbh_Navbar[4];
+extern const float fbh_Navbar__Meter[4];
+extern const float fbh_Navbar__Meter__Vector80[4];
+#ifdef FIGMABOUNDSHEADER_IMPL
+const float fbh_Navbar[4] = {0, 0, 875, 44};
+const float fbh_Navbar__Meter[4] = {552, 8, 112, 30};
+const float fbh_Navbar__Meter__Vector80[4] = {635, 33, 12, 5};
+```
 
-  npm install -g typescript
+In the above example I had selected a _group_ named **Navbar**. This group had a child node named **Meter** which is also a group. Meter had a child node named **Vector80** which is a custom shape that I drew.
 
-Finally, in the directory of your plugin, get the latest type definitions for the plugin API by running:
+The double underscore (`"__"`) indicates the z-index of the node.
 
-  npm install --save-dev @figma/plugin-typings
+Spaces and special characters in the names of your nodes simply get erased.
 
-If you are familiar with JavaScript, TypeScript will look very familiar. In fact, valid JavaScript code
-is already valid Typescript code.
+No checking is done for duplicate names of nodes, so be careful how you name them.
 
-TypeScript adds type annotations to variables. This allows code editors such as Visual Studio Code
-to provide information about the Figma API while you are writing code, as well as help catch bugs
-you previously didn't notice.
-
-For more information, visit https://www.typescriptlang.org/
-
-Using TypeScript requires a compiler to convert TypeScript (code.ts) into JavaScript (code.js)
-for the browser to run.
-
-We recommend writing TypeScript code using Visual Studio code:
-
-1. Download Visual Studio Code if you haven't already: https://code.visualstudio.com/.
-2. Open this directory in Visual Studio Code.
-3. Compile TypeScript to JavaScript: Run the "Terminal > Run Build Task..." menu item,
-    then select "npm: watch". You will have to do this again every time
-    you reopen Visual Studio Code.
-
-That's it! Visual Studio Code will regenerate the JavaScript file every time you save.
+If you wish to skip a node, prefix the name of the node with an underscore eg. rename `Vector80` to `_Vector80` will skip adding the info to our header.
