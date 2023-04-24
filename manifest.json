@@ -1,0 +1,10 @@
+{
+    "name": "FigmaBoundsHeader",
+    "id": "1232178830033324213",
+    "api": "1.0.0",
+    "main": "dist/code.js",
+    "capabilities": [],
+    "enableProposedApi": false,
+    "editorType": ["figma", "figjam"],
+    "ui": "ui.html"
+}

@@ -1,0 +1,44 @@
+<h2>Bounds header generator</h2>
+<p>
+    Scans the dimensions of each selected node and writes all the x/y/width/height info in a big C friendly .h file. You
+    must select at least 1 node or group.
+</p>
+<div id="errors" style="color: red"></div>
+<button id="generate">Generate!</button>
+<script>
+    document.getElementById('generate').onclick = () => {
+        parent.postMessage({ pluginMessage: { type: 'generate' } }, '*');
+    };
+
+    function writeError(msg) {
+        let ele = document.getElementById('errors');
+        ele.textContent = msg;
+    }
+    function clearError() {
+        let ele = document.getElementById('errors');
+        ele.textContent = '';
+    }
+
+    function saveTextAs(text, filename) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+    }
+
+    window.onmessage = event => {
+        const msg = event.data.pluginMessage;
+        if (msg.type === 'saveText') {
+            clearError();
+            saveTextAs(msg.payload, 'Bounds.h');
+        } else if (msg.type === 'error') {
+            writeError(msg.payload);
+        }
+    };
+</script>
