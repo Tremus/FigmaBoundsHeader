@@ -60,14 +60,14 @@ function generate() {
         parseBoundsRecursive('fbh', sceneNode);
     }
 
-    const text = header + implementation;
+    const text = header + implementation + '#endif // FIGMABOUNDSHEADER_IMPL';
     figma.ui.postMessage({ type: 'saveText', payload: text });
 }
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage = msg => {
+figma.ui.onmessage = (msg) => {
     // One way of distinguishing between different types of messages sent from
     // your HTML page is to use an object with a "type" property like this.
 

@@ -17,6 +17,7 @@ extern const float fbh_Navbar__Meter__Vector80[4];
 const float fbh_Navbar[4] = {0, 0, 875, 44};
 const float fbh_Navbar__Meter[4] = {552, 8, 112, 30};
 const float fbh_Navbar__Meter__Vector80[4] = {635, 33, 12, 5};
+#endif // FIGMABOUNDSHEADER_IMPL
 ```
 
 In the above example I had selected a _group_ named **Navbar**. This group had a child node named **Meter** which is also a group. Meter had a child node named **Vector80** which is a custom shape that I drew.
