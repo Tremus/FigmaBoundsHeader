@@ -30,6 +30,8 @@ const cleanString = (str: string): string => {
 // Checks whether or not to skip a node by its name
 const isNameValid = (name: string): boolean => !name.startsWith('_');
 
+const numberToFloatString = (num: number): string => (num % 1 == 0 ? `${num}.0f` : `${num}f`);
+
 function generate() {
     let header = '#pragma once\n';
     let implementation = '#ifdef FIGMABOUNDSHEADER_IMPL\n';
@@ -39,7 +41,11 @@ function generate() {
 
         const varname = `${prefix}_${cleanString(node.name)}`;
         header += `extern const float ${varname}[4];\n`;
-        implementation += `const float ${varname}[4] = {${node.x}, ${node.y}, ${node.width}, ${node.height}};\n`;
+        const x = numberToFloatString(node.x);
+        const y = numberToFloatString(node.y);
+        const w = numberToFloatString(node.width);
+        const h = numberToFloatString(node.height);
+        implementation += `const float ${varname}[4] = {${x}, ${y}, ${w}, ${h}};\n`;
 
         if ('children' in node) {
             for (let i = 0; i < node.children.length; i++) {
@@ -67,7 +73,7 @@ function generate() {
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage = (msg) => {
+figma.ui.onmessage = msg => {
     // One way of distinguishing between different types of messages sent from
     // your HTML page is to use an object with a "type" property like this.
 
