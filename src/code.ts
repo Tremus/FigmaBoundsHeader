@@ -32,9 +32,22 @@ const isNameValid = (name: string): boolean => !name.startsWith('_');
 
 const numberToFloatString = (num: number): string => (num % 1 == 0 ? `${num}.0f` : `${num}f`);
 
+const FIGMABOUNDSHEADER_H = `#ifndef FIGMABOUNDSHEADER_H
+#define FIGMABOUNDSHEADER_H
+#ifdef __cplusplus
+extern "C" {
+#endif\n`;
+
+const FIGMABOUNDSHEADER_IMPL = `#ifdef __cplusplus
+}
+#endif
+#endif // FIGMABOUNDSHEADER_H
+#ifdef FIGMABOUNDSHEADER_IMPL
+#undef FIGMABOUNDSHEADER_IMPL\n`;
+
 function generate() {
-    let header = '#pragma once\n';
-    let implementation = '#ifdef FIGMABOUNDSHEADER_IMPL\n';
+    let header = FIGMABOUNDSHEADER_H;
+    let implementation = FIGMABOUNDSHEADER_IMPL;
 
     const parseBoundsRecursive = (prefix: string, node: SceneNode): void => {
         const bounds: Array<number> = [node.x, node.y, node.width, node.height];
