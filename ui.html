@@ -36,7 +36,7 @@
         const msg = event.data.pluginMessage;
         if (msg.type === 'saveText') {
             clearError();
-            saveTextAs(msg.payload, 'Bounds.h');
+            saveTextAs(msg.payload, 'figmabounds.h');
         } else if (msg.type === 'error') {
             writeError(msg.payload);
         }

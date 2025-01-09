@@ -32,33 +32,31 @@ const isNameValid = (name: string): boolean => !name.startsWith('_');
 
 const numberToFloatString = (num: number): string => (num % 1 == 0 ? `${num}.0f` : `${num}f`);
 
-const FIGMABOUNDSHEADER_H = `#ifndef FIGMABOUNDSHEADER_H
+const HEADER_START = `#ifndef FIGMABOUNDSHEADER_H
 #define FIGMABOUNDSHEADER_H
+// clang-format off
 #ifdef __cplusplus
 extern "C" {
 #endif\n`;
 
-const FIGMABOUNDSHEADER_IMPL = `#ifdef __cplusplus
+const HEADER_END = `#ifdef __cplusplus
 }
 #endif
-#endif // FIGMABOUNDSHEADER_H
-#ifdef FIGMABOUNDSHEADER_IMPL
-#undef FIGMABOUNDSHEADER_IMPL\n`;
+// clang-format on
+#endif // FIGMABOUNDSHEADER_H`;
 
 function generate() {
-    let header = FIGMABOUNDSHEADER_H;
-    let implementation = FIGMABOUNDSHEADER_IMPL;
+    let text = HEADER_START;
 
     const parseBoundsRecursive = (prefix: string, node: SceneNode): void => {
         const bounds: Array<number> = [node.x, node.y, node.width, node.height];
 
         const varname = `${prefix}_${cleanString(node.name)}`;
-        header += `extern const float ${varname}[4];\n`;
         const x = numberToFloatString(node.x);
         const y = numberToFloatString(node.y);
         const w = numberToFloatString(node.width);
         const h = numberToFloatString(node.height);
-        implementation += `const float ${varname}[4] = {${x}, ${y}, ${w}, ${h}};\n`;
+        text += `static const float ${varname}[4] = {${x}, ${y}, ${w}, ${h}};\n`;
 
         if ('children' in node) {
             for (let i = 0; i < node.children.length; i++) {
@@ -79,14 +77,14 @@ function generate() {
         parseBoundsRecursive('fbh', sceneNode);
     }
 
-    const text = header + implementation + '#endif // FIGMABOUNDSHEADER_IMPL';
+    text += HEADER_END;
     figma.ui.postMessage({ type: 'saveText', payload: text });
 }
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage = msg => {
+figma.ui.onmessage = (msg) => {
     // One way of distinguishing between different types of messages sent from
     // your HTML page is to use an object with a "type" property like this.
 
